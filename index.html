@@ -19,14 +19,13 @@
             background-position: center;
             background-repeat: no-repeat;
             transition: background-image 0.3s ease;
-            background-color: #f0f2f5; /* 默认背景色 */
+            background-color: #f0f2f5;
         }
-        /* 顶部按钮区域 */
         .top-buttons {
             padding: 20px;
             display: flex;
             gap: 15px;
-            flex-wrap: wrap; /* 适配手机屏幕 */
+            flex-wrap: wrap;
         }
         .top-btn {
             padding: 8px 16px;
@@ -42,7 +41,6 @@
             background: rgba(255, 255, 255, 1);
             transform: translateY(-2px);
         }
-        /* 天气区域 */
         .weather {
             position: absolute;
             top: 20px;
@@ -53,7 +51,6 @@
             border-radius: 20px;
             font-size: 14px;
         }
-        /* 搜索区域 */
         .search-container {
             flex: 1;
             display: flex;
@@ -100,7 +97,6 @@
         #search-btn:hover {
             background: #005ea6;
         }
-        /* 弹窗样式 */
         .modal {
             display: none;
             position: fixed;
@@ -139,7 +135,6 @@
         .modal-option:hover {
             background: #f5f5f5;
         }
-        /* 上传图片按钮样式（适配手机点击） */
         .upload-btn {
             padding: 8px 16px;
             background: #0078d4;
@@ -167,7 +162,6 @@
         .cancel-btn {
             background: #f5f5f5;
         }
-        /* 城市选择弹窗特殊样式 */
         #city-input {
             width: 100%;
             padding: 12px;
@@ -176,11 +170,9 @@
             margin-bottom: 20px;
             outline: none;
         }
-        /* 隐藏文件输入（但保留功能） */
         #file-upload {
             display: none;
         }
-        /* 文件名显示区域 */
         #filename-display {
             color: #666;
             font-size: 13px;
@@ -192,7 +184,6 @@
     </style>
 </head>
 <body>
-    <!-- 顶部功能按钮 -->
     <div class="top-buttons">
         <button class="top-btn" onclick="window.open('https://douyin-lao6pc.github.io/web', '_blank')">跳转我的官网</button>
         <button class="top-btn" onclick="window.open('https://www.123pan.com', '_blank')">建议与反馈</button>
@@ -201,10 +192,8 @@
         <button class="top-btn" onclick="window.location.href='https://douyin-lao6pc.github.io/webindex/about.html'">关于</button>
     </div>
 
-    <!-- 天气显示 -->
     <div class="weather" id="weather-display">加载中...</div>
 
-    <!-- 搜索区域 -->
     <div class="search-container">
         <div class="search-wrapper">
             <select id="engine-select" onchange="checkGoogle()">
@@ -219,268 +208,17 @@
         </div>
     </div>
 
-    <!-- 壁纸选择弹窗 -->
     <div class="modal" id="wallpaper-modal">
         <div class="modal-content">
             <div class="modal-title">选择壁纸</div>
             <div class="modal-option" onclick="getRandomWallpaper()">
                 <span>每日网上精选壁纸</span>
-                <span style="color: #0078d4; font-size: 13px;">国内高速加载</span>
+                <span style="color: #0078d4; font-size: 13px;">国内多源加载</span>
             </div>
             <div class="modal-option">
                 <span>上传图片 <span id="filename-display"></span></span>
-                <!-- 可见的上传按钮，点击触发隐藏的文件输入 -->
                 <label class="upload-btn" for="file-upload">选择文件</label>
                 <input type="file" id="file-upload" accept="image/*" onchange="previewWallpaper(event)">
             </div>
             <div class="modal-footer">
-                <button class="modal-btn cancel-btn" onclick="closeModal('wallpaper-modal')">取消</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 城市选择弹窗 -->
-    <div class="modal" id="city-modal">
-        <div class="modal-content">
-            <div class="modal-title">更改城市</div>
-            <input type="text" id="city-input" placeholder="请输入城市名称...">
-            <div class="modal-footer">
-                <button class="modal-btn cancel-btn" onclick="closeModal('city-modal')">取消</button>
-                <button class="modal-btn confirm-btn" onclick="updateCity()">确认</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // 搜索引擎配置
-        const searchEngines = {
-            bing: 'https://cn.bing.com/search?q=',
-            baidu: 'https://www.baidu.com/s?wd=',
-            360: 'https://www.so.com/s?q=',
-            sogou: 'https://www.sogou.com/web?query=',
-            google: 'https://www.google.com/search?q='
-        };
-
-        // 百度地图API密钥（必须替换为自己的，免费申请）
-        const BAIDU_API_KEY = '你的百度地图API密钥';
-
-        // 初始化：获取地理位置和天气 + 加载保存的壁纸
-        window.onload = () => {
-            getLocation();
-            const savedWallpaper = localStorage.getItem('customWallpaper');
-            if (savedWallpaper) {
-                document.body.style.backgroundImage = `url(${savedWallpaper})`;
-            }
-        };
-
-        // 谷歌搜索引擎提示
-        function checkGoogle() {
-            if (document.getElementById('engine-select').value === 'google') {
-                alert('如果使用谷歌引擎，需要使用翻墙软件');
-            }
-        }
-
-        // 搜索功能（支持回车触发）
-        function search() {
-            const engine = document.getElementById('engine-select').value;
-            const keyword = document.getElementById('search-input').value.trim();
-            if (keyword) {
-                window.open(searchEngines[engine] + encodeURIComponent(keyword), '_blank');
-            }
-        }
-
-        // 壁纸弹窗控制
-        function openWallpaperModal() {
-            document.getElementById('wallpaper-modal').style.display = 'flex';
-            // 每次打开弹窗重置文件名显示
-            document.getElementById('filename-display').textContent = '';
-            document.getElementById('file-upload').value = '';
-        }
-
-        // 更换为国内可访问的壁纸API（picsum.photos - 无墙高速）
-        function getRandomWallpaper() {
-            // 随机尺寸（适配不同屏幕），添加壁纸分类参数确保图片质量
-            const width = window.screen.width;
-            const height = window.screen.height;
-            const categories = ['nature', 'mountains', 'ocean', 'forest', 'city', 'stars', 'flowers'];
-            const randomCategory = categories[Math.floor(Math.random() * categories.length)];
-            
-            // 国内CDN加速地址，确保加载速度
-            const wallpaperUrl = `https://picsum.photos/seed/${randomCategory}/${width}/${height}`;
-            
-            // 加载状态提示
-            document.getElementById('weather-display').textContent = '加载壁纸中...';
-            // 预加载图片，避免白屏
-            const img = new Image();
-            img.src = wallpaperUrl;
-            img.onload = () => {
-                document.body.style.backgroundImage = `url(${wallpaperUrl})`;
-                localStorage.setItem('customWallpaper', wallpaperUrl);
-                closeModal('wallpaper-modal');
-                // 恢复天气显示
-                setTimeout(() => {
-                    const currentWeather = document.getElementById('weather-display').dataset.weather || '天气加载中';
-                    document.getElementById('weather-display').textContent = currentWeather;
-                }, 500);
-            };
-            img.onerror = () => {
-                alert('壁纸加载失败，尝试更换分类...');
-                // 失败时重试一次
-                getRandomWallpaper();
-            };
-        }
-
-        // 上传图片功能
-        function previewWallpaper(event) {
-            const file = event.target.files[0];
-            if (file) {
-                // 显示文件名（处理长文件名截断）
-                const fileName = file.name.length > 10 ? file.name.substring(0, 10) + '...' : file.name;
-                document.getElementById('filename-display').textContent = `(${fileName})`;
-                
-                // 读取图片并设置为壁纸
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    document.body.style.backgroundImage = `url(${e.target.result})`;
-                    localStorage.setItem('customWallpaper', e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // 城市和天气功能（改用百度地图API，国内更稳定）
-        function openCityModal() {
-            const currentCity = document.getElementById('weather-display').dataset.city || '';
-            document.getElementById('city-input').value = currentCity;
-            document.getElementById('city-modal').style.display = 'flex';
-        }
-
-        function updateCity() {
-            const city = document.getElementById('city-input').value.trim();
-            if (city) {
-                document.getElementById('weather-display').dataset.city = city;
-                getWeatherByCityName(city); // 直接通过城市名获取天气
-                closeModal('city-modal');
-            }
-        }
-
-        // 定位功能（百度地图定位API，支持IP定位+GPS定位）
-        function getLocation() {
-            // 优先使用百度地图定位（比浏览器原生定位更稳定）
-            if (window.BMapGL) {
-                const geolocation = new BMapGL.Geolocation();
-                geolocation.getCurrentPosition(
-                    (result) => {
-                        if (geolocation.getStatus() === BMAP_STATUS_SUCCESS) {
-                            const city = result.address.city;
-                            document.getElementById('weather-display').dataset.city = city;
-                            getWeatherByCityName(city);
-                        } else {
-                            // 定位失败时，尝试IP定位获取城市
-                            getCityByIP();
-                        }
-                    },
-                    { enableHighAccuracy: true } // 开启高精度定位
-                );
-            } else {
-                // 浏览器不支持百度地图GL时，使用原生定位+IP定位兜底
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            // 原生定位后，用百度地图逆地理编码获取城市
-                            reverseGeocode(position.coords.latitude, position.coords.longitude);
-                        },
-                        () => getCityByIP() // 原生定位失败，IP定位兜底
-                    );
-                } else {
-                    getCityByIP(); // 不支持定位，IP定位兜底
-                }
-            }
-        }
-
-        // IP定位获取城市（百度地图API）
-        function getCityByIP() {
-            fetch(`https://api.map.baidu.com/location/ip?ak=${BAIDU_API_KEY}&coor=bd09ll`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.content && data.content.address_detail && data.content.address_detail.city) {
-                        const city = data.content.address_detail.city;
-                        document.getElementById('weather-display').dataset.city = city;
-                        getWeatherByCityName(city);
-                    } else {
-                        document.getElementById('weather-display').textContent = '定位失败，请手动更改城市';
-                    }
-                })
-                .catch(() => {
-                    document.getElementById('weather-display').textContent = '定位失败，请手动更改城市';
-                });
-        }
-
-        // 逆地理编码（百度地图API）
-        function reverseGeocode(lat, lon) {
-            fetch(`https://api.map.baidu.com/reverse_geocoding/v3/?ak=${BAIDU_API_KEY}&output=json&location=${lat},${lon}&coordtype=wgs84ll`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.result && data.result.addressComponent && data.result.addressComponent.city) {
-                        const city = data.result.addressComponent.city;
-                        document.getElementById('weather-display').dataset.city = city;
-                        getWeatherByCityName(city);
-                    } else {
-                        getCityByIP(); // 逆地理编码失败，IP定位兜底
-                    }
-                })
-                .catch(() => getCityByIP());
-        }
-
-        // 百度地图天气查询（国内最稳定）
-        function getWeatherByCityName(city) {
-            // 先获取城市的adcode（百度天气API需要）
-            fetch(`https://api.map.baidu.com/place/v2/search?query=${encodeURIComponent(city)}&region=${encodeURIComponent(city)}&output=json&ak=${BAIDU_API_KEY}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.results && data.results.length > 0) {
-                        const adcode = data.results[0].adcode;
-                        // 根据adcode获取天气
-                        fetch(`https://api.map.baidu.com/weather/v1/?district_id=${adcode}&data_type=all&ak=${BAIDU_API_KEY}`)
-                            .then(res => res.json())
-                            .then(weatherData => {
-                                if (weatherData.result && weatherData.result.now) {
-                                    const now = weatherData.result.now;
-                                    const weatherText = `${city} ${now.text} ${now.temp}℃ ${now.wind_dir}${now.wind_class}级`;
-                                    document.getElementById('weather-display').textContent = weatherText;
-                                    document.getElementById('weather-display').dataset.weather = weatherText;
-                                } else {
-                                    document.getElementById('weather-display').textContent = `${city} 天气获取失败`;
-                                }
-                            })
-                            .catch(() => {
-                                document.getElementById('weather-display').textContent = `${city} 天气获取失败`;
-                            });
-                    } else {
-                        document.getElementById('weather-display').textContent = `${city} 城市不存在`;
-                    }
-                })
-                .catch(() => {
-                    document.getElementById('weather-display').textContent = `${city} 天气获取失败`;
-                });
-        }
-
-        // 关闭弹窗
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        // 加载百度地图GL JS（异步加载，避免阻塞）
-        (function loadBaiduMap() {
-            const script = document.createElement('script');
-            script.src = `https://api.map.baidu.com/api?v=3.0&ak=${BAIDU_API_KEY}&type=webgl`;
-            script.onload = () => console.log('百度地图加载成功');
-            script.onerror = () => {
-                console.log('百度地图加载失败，将使用原生定位');
-                getLocation(); // 加载失败仍触发定位（走原生+IP兜底）
-            };
-            document.head.appendChild(script);
-        })();
-    </script>
-</body>
-</html>
+                <button class="modal-btn cancel-btn" onclic
