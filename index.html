@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自定义主页（支持全国所有城市天气）</title>
+    <title>自定义主页（支持全国所有地级市天气）</title>
     <style>
         * {
             margin: 0;
@@ -30,18 +30,47 @@
             z-index: 10;
         }
         .top-btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             border: none;
-            border-radius: 4px;
-            background: rgba(255, 255, 255, 0.8);
+            border-radius: 6px;
             backdrop-filter: blur(5px);
             cursor: pointer;
             font-size: 14px;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .top-btn:hover {
+        /* 壁纸按钮专属样式 */
+        .wallpaper-btn {
+            background: rgba(255, 228, 196, 0.9); /* 暖色调区分 */
+            color: #8B4513;
+        }
+        .wallpaper-btn:hover {
+            background: rgba(255, 228, 196, 1);
+            transform: translateY(-2px);
+        }
+        /* 天气按钮专属样式 */
+        .weather-btn {
+            background: rgba(173, 216, 230, 0.9); /* 冷色调区分 */
+            color: #006688;
+        }
+        .weather-btn:hover {
+            background: rgba(173, 216, 230, 1);
+            transform: translateY(-2px);
+        }
+        /* 其他按钮默认样式 */
+        .default-btn {
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+        }
+        .default-btn:hover {
             background: rgba(255, 255, 255, 1);
             transform: translateY(-2px);
+        }
+        /* 图标样式（用文字图标替代，无需额外引入） */
+        .btn-icon {
+            font-size: 16px;
         }
         .weather {
             position: absolute;
@@ -145,37 +174,3 @@
             background: #0078d4;
             color: white;
             border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .modal-footer {
-            margin-top: 20px;
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        .modal-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .confirm-btn {
-            background: #0078d4;
-            color: white;
-        }
-        .cancel-btn {
-            background: #f5f5f5;
-        }
-        #city-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #eee;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            outline: none;
-        }
-        #file-upload {
-            display: none;
-        }
-        #filena
