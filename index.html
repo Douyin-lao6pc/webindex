@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自定义主页1</title>
+    <title>自定义主页</title>
     <style>
         * {
             margin: 0;
@@ -12,80 +12,63 @@
             font-family: 'Segoe UI', sans-serif;
         }
         body {
-            margin: 0;
-            padding: 0;
             height: 100vh;
             width: 100vw;
             overflow: hidden;
+            background: #f5f5f5;
         }
-        /* 壁纸背景（优先加载，避免白屏） */
-        .wallpaper-bg {
+        .bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url('https://picsum.photos/1920/1080?nature');
+            background-image: url('https://picsum.photos/id/1039/1920/1080');
             background-size: cover;
             background-position: center;
+            filter: brightness(0.9);
             z-index: 0;
         }
-        /* 内容容器（确保所有元素在最上层） */
-        .content {
+        .container {
             position: relative;
-            z-index: 10;
+            z-index: 1;
             height: 100vh;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            padding: 20px;
         }
-        /* 顶部按钮 */
-        .top-buttons {
+        .buttons {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
         .btn {
-            padding: 8px 16px;
+            padding: 10px 18px;
             border: none;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            background: white;
             color: #333;
             cursor: pointer;
             font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: all 0.2s;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: #f8f8f8;
         }
-        .btn-weather {
-            background: rgba(144, 224, 239, 0.9);
-            color: #0f4c81;
-        }
-        .btn-wallpaper {
-            background: rgba(251, 233, 217, 0.9);
-            color: #8B4513;
-        }
-        /* 天气显示 */
-        .weather-box {
+        .weather {
             position: absolute;
             top: 20px;
             right: 20px;
-            padding: 10px 20px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
+            padding: 12px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
             font-size: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 180px;
+            text-align: center;
         }
-        /* 搜索框 */
-        .search-container {
+        .search {
             flex: 1;
             display: flex;
             justify-content: center;
@@ -93,44 +76,41 @@
             padding: 0 20px;
         }
         .search-box {
-            display: flex;
             width: 100%;
             max-width: 600px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 25px;
-            overflow: hidden;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            height: 52px;
+            background: white;
+            border-radius: 26px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         .search-select {
-            padding: 0 15px;
             border: none;
-            background: #f5f5f5;
-            color: #333;
+            padding-right: 15px;
+            margin-right: 15px;
+            border-right: 1px solid #eee;
             font-size: 14px;
+            color: #666;
             outline: none;
         }
         .search-input {
             flex: 1;
-            padding: 0 20px;
             border: none;
             outline: none;
             font-size: 16px;
-            background: transparent;
+            padding: 0 10px;
         }
         .search-btn {
-            padding: 0 20px;
+            padding: 8px 18px;
             border: none;
+            border-radius: 20px;
             background: #0078d4;
             color: white;
             cursor: pointer;
             font-size: 14px;
-            transition: background 0.2s;
         }
-        .search-btn:hover {
-            background: #005ea6;
-        }
-        /* 弹窗样式 */
         .modal {
             display: none;
             position: fixed;
@@ -139,48 +119,63 @@
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.5);
-            z-index: 100;
             justify-content: center;
             align-items: center;
+            z-index: 100;
         }
         .modal-content {
             background: white;
             padding: 25px;
-            border-radius: 15px;
+            border-radius: 12px;
             width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            max-width: 350px;
         }
         .modal-title {
             font-size: 18px;
-            font-weight: 600;
             margin-bottom: 20px;
-            color: #333;
+            font-weight: 600;
         }
-        .modal-input {
-            width: 100%;
-            padding: 12px 15px;
+        .modal-item {
+            padding: 12px;
             border: 1px solid #eee;
             border-radius: 8px;
             margin-bottom: 15px;
-            font-size: 14px;
-            outline: none;
+            cursor: pointer;
         }
-        .modal-btn-group {
+        .modal-item:hover {
+            background: #f9f9f9;
+        }
+        .modal-btns {
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+            margin-top: 20px;
         }
         .modal-btn {
             padding: 8px 16px;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 14px;
         }
-        .modal-btn-cancel {
+        .cancel {
             background: #f5f5f5;
             color: #666;
         }
-        .modal-btn-confirm {
-    
+    </style>
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="container">
+        <div class="buttons">
+            <button class="btn" onclick="window.open('https://douyin-lao6pc.github.io/web', '_blank')">🌐 我的官网</button>
+            <button class="btn" onclick="window.open('https://www.123pan.com', '_blank')">💬 建议反馈</button>
+            <button class="btn" onclick="openModal('wallpaper-modal')">🖼️ 更换壁纸</button>
+            <button class="btn" onclick="showCityInput()">🌤️ 切换城市</button>
+        </div>
+
+        <!-- 天气显示（接口动态获取） -->
+        <div class="weather" id="weather">加载天气中...</div>
+
+        <!-- 城市输入弹窗 -->
+        <div class="modal" id="city-modal">
+            <div class="modal-content">
