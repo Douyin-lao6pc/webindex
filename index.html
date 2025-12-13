@@ -3,179 +3,559 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>自定义主页</title>
+    <title>lao6-PE定制浏览器主页</title>
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         }
+
         body {
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-            background: #f5f5f5;
+            min-height: 100vh;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            transition: background-image 0.5s ease-in-out;
+            padding-top: 40px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
-        .bg {
+
+        /* 顶部小黑条 */
+        .top-bar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://picsum.photos/id/1039/1920/1080');
-            background-size: cover;
-            background-position: center;
-            filter: brightness(0.9);
-            z-index: 0;
-        }
-        .container {
-            position: relative;
-            z-index: 1;
-            height: 100vh;
-            padding: 20px;
+            right: 0;
+            height: 40px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #fff;
             display: flex;
-            flex-direction: column;
-        }
-        .buttons {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 30px;
-        }
-        .btn {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 8px;
-            background: white;
-            color: #333;
-            cursor: pointer;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
             font-size: 14px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            border-radius: 0 0 12px 12px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .btn:hover {
-            background: #f8f8f8;
+
+        .browser-info {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-        .weather {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            background: white;
+
+        .current-time {
+            white-space: nowrap;
+        }
+
+        /* 功能按钮区 */
+        .btn-group {
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Win7 Aero按钮样式 + Win11圆角 */
+        .custom-btn {
+            background: linear-gradient(to bottom, #f2f2f2 0%, #e6e6e6 50%, #d9d9d9 51%, #cccccc 100%);
+            color: #212121;
+            border: 1px solid #b3b3b3;
             border-radius: 8px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            font-size: 15px;
-            min-width: 180px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            transition: all 0.2s ease;
+        }
+
+        .custom-btn:hover {
+            background: linear-gradient(to bottom, #f9f9f9 0%, #f2f2f2 50%, #e6e6e6 51%, #d9d9d9 100%);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .custom-btn:active {
+            background: linear-gradient(to bottom, #e6e6e6 0%, #d9d9d9 50%, #cccccc 51%, #bfbfbf 100%);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 图标样式优化 */
+        .btn-icon {
+            font-size: 18px;
+            width: 20px;
             text-align: center;
         }
-        .search {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 20px;
+
+        .icon-official {
+            color: #0078d7; /* 微软蓝 */
         }
-        .search-box {
-            width: 100%;
-            max-width: 600px;
-            height: 52px;
-            background: white;
-            border-radius: 26px;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+        .icon-wallpaper {
+            color: #00b7c3; /* 青绿色 */
         }
-        .search-select {
-            border: none;
-            padding-right: 15px;
-            margin-right: 15px;
-            border-right: 1px solid #eee;
+
+        .icon-network {
+            color: #107c10; /* 微软绿 */
+        }
+
+        .icon-local {
+            color: #ff8c00; /* 橙色 */
+        }
+
+        .icon-search {
+            color: #fff;
+            font-size: 18px;
+        }
+
+        /* 壁纸设置下拉菜单 */
+        .dropdown-menu {
+            position: absolute;
+            top: 100px;
+            left: 16px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 180px;
+            z-index: 999;
+            display: none;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-item {
+            padding: 10px 16px;
             font-size: 14px;
-            color: #666;
-            outline: none;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .search-input {
-            flex: 1;
+
+        .dropdown-item:hover {
+            background-color: rgba(0, 120, 215, 0.1);
+        }
+
+        .dropdown-item:active {
+            background-color: rgba(0, 120, 215, 0.2);
+        }
+
+        /* 搜索区域 */
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 500;
+            color: #212121;
+            margin-bottom: 24px;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        /* 搜索框 */
+        .search-box-wrapper {
+            display: flex;
+            width: 100%;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 24px;
+            overflow: hidden;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .search-box-wrapper:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border-color: rgba(0, 120, 215, 0.3);
+        }
+
+        .search-engine-select {
+            padding: 0 16px;
+            background-color: rgba(245, 245, 245, 0.7);
             border: none;
             outline: none;
             font-size: 16px;
-            padding: 0 10px;
+            color: #212121;
+            cursor: pointer;
+            border-right: 1px solid rgba(0, 0, 0, 0.1);
         }
-        .search-btn {
-            padding: 8px 18px;
+
+        .search-input {
+            flex: 1;
+            padding: 14px 16px;
             border: none;
-            border-radius: 20px;
-            background: #0078d4;
-            color: white;
+            outline: none;
+            font-size: 16px;
+            background-color: transparent;
+        }
+
+        /* 搜索按钮 */
+        .search-btn {
+            padding: 0 20px;
+            background: linear-gradient(to bottom, #0078d7 0%, #0063b1 100%);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 0 24px 24px 0;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(to bottom, #0084e0 0%, #006cc0 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .search-btn:active {
+            background: linear-gradient(to bottom, #0063b1 0%, #00559a 100%);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 必应版本选择器（勾选样式） */
+        .bing-version-selector {
+            display: none;
+            margin-top: 16px;
+            gap: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .bing-version-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             cursor: pointer;
             font-size: 14px;
         }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-        }
-        .modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 350px;
-        }
-        .modal-title {
-            font-size: 18px;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-        .modal-item {
-            padding: 12px;
-            border: 1px solid #eee;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            cursor: pointer;
-        }
-        .modal-item:hover {
-            background: #f9f9f9;
-        }
-        .modal-btns {
+
+        .bing-version-checkbox {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            border: 1px solid #0078d7;
             display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
         }
-        .modal-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
+
+        .bing-version-option.active .bing-version-checkbox {
+            background-color: #0078d7;
         }
-        .cancel {
-            background: #f5f5f5;
-            color: #666;
+
+        .bing-version-checkmark {
+            color: #fff;
+            font-size: 12px;
+            display: none;
+        }
+
+        .bing-version-option.active .bing-version-checkmark {
+            display: block;
+        }
+
+        /* 隐藏的文件输入 */
+        #file-input {
+            display: none;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 480px) {
+            .top-bar {
+                font-size: 12px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .search-engine-select {
+                padding: 0 8px;
+                font-size: 14px;
+            }
+
+            .search-input {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+
+            .bing-version-selector {
+                gap: 10px;
+                padding: 8px 12px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="bg"></div>
-    <div class="container">
-        <div class="buttons">
-            <button class="btn" onclick="window.open('https://douyin-lao6pc.github.io/web', '_blank')">🌐 我的官网</button>
-            <button class="btn" onclick="window.open('https://www.123pan.com', '_blank')">💬 建议反馈</button>
-            <button class="btn" onclick="openModal('wallpaper-modal')">🖼️ 更换壁纸</button>
-            <button class="btn" onclick="showCityInput()">🌤️ 切换城市</button>
+    <!-- 顶部小黑条 -->
+    <div class="top-bar">
+        <div class="browser-info" id="browserInfo">您可能正在使用的浏览器：未知  内核版本：未知</div>
+        <div class="current-time" id="currentTime"></div>
+    </div>
+
+    <!-- 功能按钮区 -->
+    <div class="btn-group">
+        <button class="custom-btn" id="officialWebsiteBtn">
+            <i class="fas fa-external-link-alt btn-icon icon-official"></i>
+            访问官网
+        </button>
+        <button class="custom-btn" id="wallpaperSettingsBtn">
+            <i class="fas fa-palette btn-icon icon-wallpaper"></i>
+            设置壁纸
+        </button>
+        <!-- 壁纸设置下拉菜单 -->
+        <div class="dropdown-menu" id="wallpaperDropdown">
+            <div class="dropdown-item" id="networkWallpaperBtn">
+                <i class="fas fa-cloud btn-icon icon-network"></i>
+                网络获取壁纸
+            </div>
+            <div class="dropdown-item" id="localWallpaperBtn">
+                <i class="fas fa-file-image btn-icon icon-local"></i>
+                本地图片
+            </div>
         </div>
+    </div>
 
-        <!-- 天气显示（接口动态获取） -->
-        <div class="weather" id="weather">加载天气中...</div>
+    <!-- 搜索区域 -->
+    <div class="search-container">
+        <h1 class="page-title">lao6-PE定制浏览器主页</h1>
+        <div class="search-box-wrapper">
+            <select class="search-engine-select" id="searchEngine">
+                <option value="bing">必应</option>
+                <option value="google">谷歌</option>
+                <option value="360">360</option>
+                <option value="sogou">搜狗</option>
+                <option value="baidu">百度</option>
+                <option value="quark">夸克</option>
+            </select>
+            <input type="text" class="search-input" id="searchInput" placeholder="请输入搜索内容...">
+            <button class="search-btn" id="searchBtn">
+                <i class="fas fa-search icon-search"></i>
+            </button>
+        </div>
+        <!-- 必应版本选择器（勾选样式） -->
+        <div class="bing-version-selector" id="bingVersionSelector">
+            <div class="bing-version-option active" data-version="cn">
+                <div class="bing-version-checkbox">
+                    <i class="fas fa-check bing-version-checkmark"></i>
+                </div>
+                <span>必应国内版</span>
+            </div>
+            <div class="bing-version-option" data-version="intl">
+                <div class="bing-version-checkbox">
+                    <i class="fas fa-check bing-version-checkmark"></i>
+                </div>
+                <span>必应国际版</span>
+            </div>
+        </div>
+    </div>
 
-        <!-- 城市输入弹窗 -->
-        <div class="modal" id="city-modal">
-            <div class="modal-content">
+    <!-- 隐藏的文件选择器 -->
+    <input type="file" id="file-input" accept="image/*">
+
+    <script>
+        // 1. 获取浏览器信息
+        function getBrowserInfo() {
+            const userAgent = navigator.userAgent;
+            let browserName = "未知";
+            let engineVersion = "未知";
+
+            if (userAgent.includes("Chrome")) {
+                browserName = "Google Chrome";
+                const chromeMatch = userAgent.match(/Chrome\/(\d+(\.\d+)*)/);
+                engineVersion = chromeMatch ? `Blink ${chromeMatch[1]}` : "Blink 未知";
+            } else if (userAgent.includes("Firefox")) {
+                browserName = "Mozilla Firefox";
+                const firefoxMatch = userAgent.match(/Firefox\/(\d+(\.\d+)*)/);
+                engineVersion = firefoxMatch ? `Gecko ${firefoxMatch[1]}` : "Gecko 未知";
+            } else if (userAgent.includes("Safari") && !userAgent.includes("Chrome")) {
+                browserName = "Apple Safari";
+                const safariMatch = userAgent.match(/Version\/(\d+(\.\d+)*)/);
+                engineVersion = safariMatch ? `WebKit ${safariMatch[1]}` : "WebKit 未知";
+            } else if (userAgent.includes("Edge")) {
+                browserName = "Microsoft Edge";
+                const edgeMatch = userAgent.match(/Edge\/(\d+(\.\d+)*)/);
+                engineVersion = edgeMatch ? `Blink ${edgeMatch[1]}` : "Blink 未知";
+            }
+
+            document.getElementById("browserInfo").textContent = 
+                `您可能正在使用的浏览器：${browserName}  内核版本：${engineVersion}`;
+        }
+
+        // 2. 显示当前时间
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString("zh-CN", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: false
+            });
+            document.getElementById("currentTime").textContent = timeString;
+        }
+
+        // 3. 随机网络背景
+        function setRandomNetworkBackground() {
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const randomId = Math.floor(Math.random() * 1000);
+            const bgUrl = `https://picsum.photos/id/${randomId}/${width}/${height}`;
+            document.body.style.backgroundImage = `url(${bgUrl})`;
+        }
+
+        // 4. 壁纸设置功能
+        const wallpaperDropdown = document.getElementById("wallpaperDropdown");
+        const wallpaperSettingsBtn = document.getElementById("wallpaperSettingsBtn");
+        const networkWallpaperBtn = document.getElementById("networkWallpaperBtn");
+        const localWallpaperBtn = document.getElementById("localWallpaperBtn");
+        const fileInput = document.getElementById("file-input");
+
+        wallpaperSettingsBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            wallpaperDropdown.style.display = wallpaperDropdown.style.display === "block" ? "none" : "block";
+        });
+
+        document.addEventListener("click", () => {
+            wallpaperDropdown.style.display = "none";
+        });
+
+        networkWallpaperBtn.addEventListener("click", () => {
+            setRandomNetworkBackground();
+            wallpaperDropdown.style.display = "none";
+        });
+
+        localWallpaperBtn.addEventListener("click", () => {
+            fileInput.click();
+            wallpaperDropdown.style.display = "none";
+        });
+
+        fileInput.addEventListener("change", (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith("image/")) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    document.body.style.backgroundImage = `url(${event.target.result})`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 5. 访问官网功能
+        document.getElementById("officialWebsiteBtn").addEventListener("click", () => {
+            window.open("https://douyin-lao6pc.github.io/web", "_blank");
+        });
+
+        // 6. 搜索引擎及必应版本切换功能
+        const searchEngine = document.getElementById("searchEngine");
+        const searchInput = document.getElementById("searchInput");
+        const searchBtn = document.getElementById("searchBtn");
+        const bingVersionSelector = document.getElementById("bingVersionSelector");
+        const bingVersionOptions = document.querySelectorAll(".bing-version-option");
+        
+        // 必应版本切换逻辑（勾选样式）
+        let currentBingVersion = "cn";
+        bingVersionOptions.forEach(option => {
+            option.addEventListener("click", () => {
+                bingVersionOptions.forEach(opt => opt.classList.remove("active"));
+                option.classList.add("active");
+                currentBingVersion = option.dataset.version;
+            });
+        });
+
+        // 搜索引擎切换时显示/隐藏必应版本选项
+        searchEngine.addEventListener("change", () => {
+            if (searchEngine.value === "google") {
+                alert("谷歌暂不支持国内网络访问，如果您选择则需要VPN翻墙使用");
+            }
+            if (searchEngine.value === "bing") {
+                bingVersionSelector.style.display = "flex";
+            } else {
+                bingVersionSelector.style.display = "none";
+            }
+        });
+
+        // 搜索引擎URL映射
+        const searchUrls = {
+            bing: {
+                cn: "https://cn.bing.com/search?q=",
+                intl: "https://www.bing.com/search?q="
+            },
+            google: "https://www.google.com/search?q=",
+            360: "https://www.so.com/s?q=",
+            sogou: "https://www.sogou.com/web?q=",
+            baidu: "https://www.baidu.com/s?wd=",
+            quark: "https://www.quark.cn/s?q="
+        };
+
+        // 搜索执行函数
+        function executeSearch() {
+            const query = searchInput.value.trim();
+            const engine = searchEngine.value;
+            if (query) {
+                let searchUrl;
+                if (engine === "bing") {
+                    searchUrl = searchUrls.bing[currentBingVersion] + encodeURIComponent(query);
+                } else {
+                    searchUrl = searchUrls[engine] + encodeURIComponent(query);
+                }
+                window.open(searchUrl, "_blank");
+            } else {
+                searchInput.focus();
+            }
+        }
+
+        // 搜索按钮点击事件
+        searchBtn.addEventListener("click", executeSearch);
+
+        // 回车键搜索
+        searchInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                executeSearch();
+            }
+        });
+
+        // 初始化
+        window.onload = () => {
+            getBrowserInfo();
+            updateTime();
+            setInterval(updateTime, 1000);
+            setRandomNetworkBackground();
+            bingVersionSelector.style.display = "flex"; // 默认显示必应版本选择器
+        };
+
+        // 窗口大小改变时重新设置背景尺寸
+        window.onresize = () => {
+            if (document.body.style.backgroundImage.includes("picsum.photos")) {
+                setRandomNetworkBackground();
+            }
+        };
+    </script>
+</body>
+</html>
