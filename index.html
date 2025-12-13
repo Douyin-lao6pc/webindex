@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>lao6-PE定制浏览器主页</title>
-    <link rel="icon" href="icon.ico" type="image/x-icon"> <!-- 网页图标 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" href="icon.ico" type="image/x-icon">
+    <!-- 替换为国内CDN的Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -21,19 +22,16 @@
             background-repeat: no-repeat;
             transition: background-image 0.5s ease-in-out;
             padding-top: 40px;
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background-color: #f5f5f5; /* 替换毛玻璃为纯色背景 */
         }
 
-        /* 顶部小黑条 */
         .top-bar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             height: 40px;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: #212121;
             color: #fff;
             display: flex;
             justify-content: space-between;
@@ -42,9 +40,7 @@
             font-size: 14px;
             z-index: 1000;
             border-radius: 0 0 12px 12px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid #444;
         }
 
         .browser-info {
@@ -57,16 +53,14 @@
             white-space: nowrap;
         }
 
-        /* 功能按钮区 */
         .btn-group {
             padding: 16px;
             display: flex;
             gap: 12px;
         }
 
-        /* Win7 Aero按钮样式 + Win11圆角 */
         .custom-btn {
-            background: linear-gradient(to bottom, #f2f2f2 0%, #e6e6e6 50%, #d9d9d9 51%, #cccccc 100%);
+            background: linear-gradient(to bottom, #f2f2f2 0%, #e6e6e6 50%, #d9d9d9 51%, #cccccccccc 100%);
             color: #212121;
             border: 1px solid #b3b3b3;
             border-radius: 8px;
@@ -77,13 +71,13 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
             transition: all 0.2s ease;
         }
 
         .custom-btn:hover {
             background: linear-gradient(to bottom, #f9f9f9 0%, #f2f2f2 50%, #e6e6e6 51%, #d9d9d9 100%);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
 
         .custom-btn:active {
@@ -91,51 +85,45 @@
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        /* 新图标样式 */
         .btn-icon {
             font-size: 18px;
             width: 20px;
             text-align: center;
         }
 
-        .icon-official { color: #2563eb; } /* 深蓝色 */
-        .icon-wallpaper { color: #be123c; } /* 深红色 */
-        .icon-network { color: #16a34a; } /* 深绿色 */
-        .icon-local { color: #ca8a04; } /* 深黄色 */
+        .icon-official { color: #2563eb; }
+        .icon-wallpaper { color: #be123c; }
+        .icon-network { color: #16a34a; }
+        .icon-local { color: #ca8a04; }
         .icon-search { color: #fff; font-size: 18px; }
         .icon-keyboard { color: #6b7280; cursor: pointer; padding: 0 12px; }
         .icon-keyboard:hover { color: #212121; }
 
-        /* 壁纸设置下拉菜单 */
         .dropdown-menu {
             position: absolute;
             top: 100px;
             left: 16px;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             min-width: 180px;
             z-index: 999;
             display: none;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
         }
 
         .dropdown-item {
             padding: 10px 16px;
             font-size: 14px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .dropdown-item:hover { background-color: rgba(0, 120, 215, 0.1); }
-        .dropdown-item:active { background-color: rgba(0, 120, 215, 0.2); }
+        .dropdown-item:hover { background-color: #f5f5f5; }
+        .dropdown-item:active { background-color: #e0e0e0; }
 
-        /* 搜索区域 */
         .search-container {
             display: flex;
             flex-direction: column;
@@ -151,75 +139,34 @@
             font-weight: 500;
             color: #212121;
             margin-bottom: 24px;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
         }
 
-        /* 搜索框（新增键盘按钮容器） */
         .search-box-wrapper {
             display: flex;
             width: 100%;
-            border: 1px solid rgba(0, 0, 0, 0.15);
+            border: 1px solid #e0e0e0;
             border-radius: 24px;
             overflow: hidden;
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
+            background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             transition: all 0.2s ease;
         }
 
         .search-box-wrapper:hover {
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-            border-color: rgba(0, 120, 215, 0.3);
+            border-color: #d0d0d0;
         }
 
         .search-engine-select {
             padding: 0 16px;
-            background-color: rgba(245, 245, 245, 0.7);
+            background-color: #f9f9f9;
             border: none;
             outline: none;
             font-size: 16px;
             color: #212121;
             cursor: pointer;
-            border-right: 1px solid rgba(0, 0, 0, 0.1);
+            border-right: 1px solid #e0e0e0;
         }
 
         .search-input-wrap {
-            flex: 1;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 14px 16px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-            background-color: transparent;
-        }
-
-        /* 搜索按钮 */
-        .search-btn {
-            padding: 0 20px;
-            background: linear-gradient(to bottom, #0078d7 0%, #0063b1 100%);
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            border-radius: 0 24px 24px 0;
-            transition: all 0.2s ease;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-        }
-
-        .search-btn:hover {
-            background: linear-gradient(to bottom, #0084e0 0%, #006cc0 100%);
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
-        }
-
-        .search-btn:active {
-            background: linear-gradient(to bottom, #0063b1 0%, #00559a 100%);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        /* 必应版本勾选样式（优化选中视觉） */
-        .bing-version-select
+            f
